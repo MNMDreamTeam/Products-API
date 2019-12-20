@@ -25,6 +25,13 @@ CREATE TABLE IF NOT EXISTS photos
 CREATE TABLE IF NOT EXISTS skus 
     (style_id integer REFERENCES styles(style_id),
     skus_id integer UNIQUE NOT NULL,
-    size VARCHAR (5),
+    size VARCHAR (10),
     quantity integer);
 
+COPY product_info FROM '/Users/neilcrothers/ghrbld06/Data/products.csv' DELIMITER ',' CSV HEADER;
+
+-- COPY styles FROM '/Users/neilcrothers/ghrbld06/Data/styles.csv' DELIMITER ',' CSV HEADER;
+
+-- COPY photos FROM '/Users/neilcrothers/ghrbld06/Data/photos.csv' DELIMITER ',' CSV HEADER;
+
+-- COPY skus(skus_id, style_id, size, quantity) FROM '/Users/neilcrothers/ghrbld06/Data/skus.csv' DELIMITER ',' CSV HEADER;
