@@ -1,5 +1,7 @@
 CREATE DATABASE sdc_products;
 
+\c sdc_products;
+
 CREATE TABLE IF NOT EXISTS product_info 
     (product_id serial PRIMARY KEY,
     name VARCHAR (100) NOT NULL,
