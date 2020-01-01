@@ -9,12 +9,31 @@ const pgClient = new pg.Client({
 })
 pgClient.connect();
 
+const getListOfProducts = (req, callback) => {
+    const page = parseInt(req.query.page) || '1';
+    const count = parseInt(req.query.count) || '5';
+    let start = 1;
+    let end = 5;
+    
+    start = ((Number(page) - 1) * Number(count)) + 1;
+    end = (start + Number(count)) - 1;
+
+    pgClient.query(`SELECT * FROM product_info WHERE product_id BETWEEN ${start} AND ${end}`)
+        .then(result => {
+            callback(result.rows);
+        }).catch((err) => {
+            if (err){
+                console.log(err);
+            }
+        });
+}
+
 const getUserById = (req, res) => {
     const id = parseInt(req.params.product_id);
 
     pgClient.query(`SELECT * FROM product_info WHERE product_id = ${id}` )
-        .then(res => {
-            console.log(res.rows);
+        .then(result => {
+            res.send(result.rows);
         }).catch((err, result) => {
             if (err){
                 console.log(err);
@@ -23,5 +42,6 @@ const getUserById = (req, res) => {
 }
 
 module.exports = {
+    getListOfProducts,
     getUserById
 }

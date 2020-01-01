@@ -15,6 +15,12 @@ app.get('/', (req, res) => {
     res.json({ info: 'Node.js, Express, Postgres API' })
 })
 
+app.get('/products/list', (req, res) => {
+    db.getListOfProducts(req, (result) => {
+        res.send(result);
+    });
+})
+
 app.get('/products/:product_id', db.getUserById);
 
 app.listen(port, () => {
