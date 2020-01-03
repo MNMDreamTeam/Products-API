@@ -28,7 +28,7 @@ const getListOfProducts = (req, callback) => {
         });
 }
 
-const getUserById = (req, res) => {
+const getProductById = (req, res) => {
     const id = parseInt(req.params.product_id);
 
 
@@ -52,9 +52,8 @@ const getUserById = (req, res) => {
 
     Promise.all([query1, query2])
         .then((promises) => {
-            // console.log('---', promises[0], '***', promises[1])
             promises[0][0].features = promises[1];
-            res.send(promises[0][0])
+            res.send(promises[0][0]);
         })
         .catch((err) => {
             if (err) {
@@ -63,7 +62,30 @@ const getUserById = (req, res) => {
         });
 }
 
+// const getStylesById = (req, res) => {
+//     const tableJoin = pgClient.query(``)
+// }
+
+const getRelatedById = (req, callback) => {
+    const id = parseInt(req.params.product_id);
+
+    pgClient.query(`SELECT related_product_id FROM related WHERE product_id = ${id};`)
+        .then(result => {
+            var relatedArr = [];
+            for (let i = 0; i < result.rows.length; i++){
+                relatedArr.push(result.rows[i].related_product_id);
+            }
+            callback(relatedArr);
+        }).catch((err) => {
+            if (err) {
+                console.log(err);
+            }
+        })
+}
+
 module.exports = {
     getListOfProducts,
-    getUserById
+    getProductById,
+    // getStylesById,
+    getRelatedById
 }

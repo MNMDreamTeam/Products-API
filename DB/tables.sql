@@ -36,6 +36,11 @@ CREATE TABLE IF NOT EXISTS features
     feature VARCHAR (50),
     value VARCHAR (50));
 
+CREATE TABLE IF NOT EXISTS related
+    (product_id integer REFERENCES product_info(product_id),
+    related_id integer PRIMARY KEY,
+    related_product_id integer);
+
 COPY product_info FROM '/Users/neilcrothers/ghrbld06/Data/product.csv' DELIMITER ',' CSV HEADER;
 
 COPY styles(style_id, product_id, name, sale_price, original_price, is_default) FROM '/Users/neilcrothers/ghrbld06/Data/styles.csv' DELIMITER ',' CSV HEADER;
@@ -45,3 +50,5 @@ COPY photos(photos_id, style_id, url, thumbnail_url) FROM '/Users/neilcrothers/g
 COPY skus(skus_id, style_id, size, quantity) FROM '/Users/neilcrothers/ghrbld06/Data/skus.csv' DELIMITER ',' CSV HEADER;
 
 COPY features(feature_id, product_id, feature, value) FROM '/Users/neilcrothers/ghrbld06/Data/features.csv' DELIMITER ',' CSV HEADER;
+
+COPY related(related_id, product_id, related_product_id) FROM '/Users/neilcrothers/ghrbld06/Data/related.csv' DELIMITER ',' CSV HEADER;
