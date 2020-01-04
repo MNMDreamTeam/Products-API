@@ -62,11 +62,11 @@ const getProductById = (req, res) => {
         });
 }
 
-// const getStylesById = (req, res) => {
-//     const tableJoin = pgClient.query(``)
-// }
+const getStylesById = (req, res) => {
+    const queryStyles = pgClient.query(``)
+}
 
-const getRelatedById = (req, callback) => {
+const getRelatedById = (req, res) => {
     const id = parseInt(req.params.product_id);
 
     pgClient.query(`SELECT related_product_id FROM related WHERE product_id = ${id};`)
@@ -75,7 +75,7 @@ const getRelatedById = (req, callback) => {
             for (let i = 0; i < result.rows.length; i++){
                 relatedArr.push(result.rows[i].related_product_id);
             }
-            callback(relatedArr);
+            res.send(relatedArr);
         }).catch((err) => {
             if (err) {
                 console.log(err);
