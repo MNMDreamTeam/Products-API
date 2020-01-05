@@ -62,8 +62,57 @@ const getProductById = (req, res) => {
         });
 }
 
-const getStylesById = (req, res) => {
-    const queryStyles = pgClient.query(``)
+const getStylesById = async (req, res) => {
+    const id = parseInt(req.params.product_id);
+    var styleId = [];
+
+    const queryStyles = await pgClient.query(`SELECT * FROM styles WHERE product_id = ${id};`)
+        .then(result => {
+            for (let i = 0; i < result.rows.length; i++){
+                styleId.push(result.rows[i].style_id);
+            }
+            console.log(styleId);
+            return (result.rows, styleId);
+        }).catch((err) => {
+            if (err) {
+                console.log(err);
+            }
+        })
+
+    var queries = [];
+    // var counter = 0;
+    for (let i = 0; i < styleId.length; i++){
+        queries.push(pgClient.query(`SELECT photos.thumbnail_url, photos.url FROM photos WHERE style_id = ${styleId[i]}`))
+        //console.log(styleId[i]);
+            // .then(result => {
+            //     console.log('counter', counter, 'i', i);
+            //     counter ++;
+            //     // return queries;
+            // }).catch((err) => {
+            //     if (err) {
+            //         console.log(err);
+            //     }
+            // })
+    }
+    
+
+    var photosQuery = [];
+
+    Promise.all(queries)
+        .then((promises) => {
+            //console.log('queries', queries);
+            // console.log('promises', promises);
+            for (let i = 0; i < promises.length; i++){
+                console.log(promises[i].rows);
+                photosQuery.push(promises[i].rows);
+            }
+            console.log('photosQuery', photosQuery);
+            return photosQuery;
+        }).catch((err) => {
+            if (err) {
+                console.log(err);
+            }
+        })
 }
 
 const getRelatedById = (req, res) => {
@@ -86,6 +135,6 @@ const getRelatedById = (req, res) => {
 module.exports = {
     getListOfProducts,
     getProductById,
-    // getStylesById,
+    getStylesById,
     getRelatedById
 }

@@ -23,7 +23,7 @@ app.get('/products/list', (req, res) => {
 
 app.get('/products/:product_id', db.getProductById);
 
-// app.get('/products/:product_id/styles', db.getStylesById);
+app.get('/products/:product_id/styles', db.getStylesById);
 
 app.get('/products/:product_id/related', db.getRelatedById);
 
