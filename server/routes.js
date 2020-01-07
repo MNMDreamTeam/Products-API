@@ -72,7 +72,6 @@ const getStylesById = async (req, res) => {
             for (let i = 0; i < result.rows.length; i++){
                 styleId.push(result.rows[i].style_id);
             }
-            // console.log('styleId', styleId, 'stylesQuery', result.rows);
             stylesObj = result.rows;
             return (stylesObj, styleId);
         }).catch((err) => {
@@ -93,22 +92,16 @@ const getStylesById = async (req, res) => {
     var skusQuery = {};
     await Promise.all(queries)
         .then((promises) => {
-            // console.log('promises', promises);
             for (let i = 0; i < promises.length; i++){
-                // console.log(promises[i].rows);
                 if (promises[i].rows.length > 0){
                     photosQuery.push(promises[i].rows);
                 }
             }
-            // console.log('photosQuery', photosQuery);
-            // return (photosQuery);
             return Promise.all(skusArr)
         }).then((skusPromise) => {
-            // console.log(skusPromise);
             for (let j = 0; j < skusPromise.length; j++){
                 for (let k = 0; k < skusPromise[j].rows.length; k++){
                     skusQuery[skusPromise[j].rows[k].size] = skusPromise[j].rows[k].quantity;
-                    // console.log('skusQuery', skusQuery);
                 }
             }
         }).catch((err) => {
@@ -129,7 +122,6 @@ const getStylesById = async (req, res) => {
                 resultArr.push(finalResult[i]);
             }
             allPromises.results = resultArr;
-            // console.log('finalResult', finalResult, 'finalPromise', allPromises, 'skus', allPromises.results[0].skus);
             res.send(allPromises);
         }).catch((err) => {
             if (err) {
