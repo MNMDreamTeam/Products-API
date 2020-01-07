@@ -108,7 +108,7 @@ const getStylesById = async (req, res) => {
             for (let j = 0; j < skusPromise.length; j++){
                 for (let k = 0; k < skusPromise[j].rows.length; k++){
                     skusQuery[skusPromise[j].rows[k].size] = skusPromise[j].rows[k].quantity;
-                console.log('skusQuery', skusQuery);
+                    // console.log('skusQuery', skusQuery);
                 }
             }
         }).catch((err) => {
