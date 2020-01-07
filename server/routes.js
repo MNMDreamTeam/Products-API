@@ -65,7 +65,6 @@ const getProductById = (req, res) => {
 const getStylesById = async (req, res) => {
     const id = parseInt(req.params.product_id);
     var styleId = [];
-    var stylesObj;
 
     const queryStyles = await pgClient.query(`SELECT * FROM styles WHERE product_id = ${id};`)
         .then(result => {
