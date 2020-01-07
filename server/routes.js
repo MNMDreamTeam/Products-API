@@ -6,7 +6,7 @@ const pgClient = new pg.Client({
     host: process.env.PGHOST,
     database: process.env.PGDATABASE,
     port: process.env.PGPORT
-})
+});
 pgClient.connect();
 
 const getListOfProducts = (req, callback) => {
@@ -48,7 +48,7 @@ const getProductById = (req, res) => {
             if (err) {
                 console.log(err);
             }
-        })
+        });
 
     Promise.all([query1, query2])
         .then((promises) => {
@@ -65,54 +65,77 @@ const getProductById = (req, res) => {
 const getStylesById = async (req, res) => {
     const id = parseInt(req.params.product_id);
     var styleId = [];
+    var stylesObj;
 
     const queryStyles = await pgClient.query(`SELECT * FROM styles WHERE product_id = ${id};`)
         .then(result => {
             for (let i = 0; i < result.rows.length; i++){
                 styleId.push(result.rows[i].style_id);
             }
-            console.log(styleId);
-            return (result.rows, styleId);
+            // console.log('styleId', styleId, 'stylesQuery', result.rows);
+            stylesObj = result.rows;
+            return (stylesObj, styleId);
         }).catch((err) => {
             if (err) {
                 console.log(err);
             }
-        })
+        });
 
     var queries = [];
-    // var counter = 0;
+    var skusArr = [];
     for (let i = 0; i < styleId.length; i++){
-        queries.push(pgClient.query(`SELECT photos.thumbnail_url, photos.url FROM photos WHERE style_id = ${styleId[i]}`))
-        //console.log(styleId[i]);
-            // .then(result => {
-            //     console.log('counter', counter, 'i', i);
-            //     counter ++;
-            //     // return queries;
-            // }).catch((err) => {
-            //     if (err) {
-            //         console.log(err);
-            //     }
-            // })
+        queries.push(pgClient.query(`SELECT photos.thumbnail_url, photos.url FROM photos WHERE style_id = ${styleId[i]}`));
+        skusArr.push(pgClient.query(`SELECT skus.size, skus.quantity FROM skus WHERE style_id = ${styleId[i]}`));
     }
     
 
     var photosQuery = [];
-
-    Promise.all(queries)
+    var skusQuery = {};
+    await Promise.all(queries)
         .then((promises) => {
-            //console.log('queries', queries);
             // console.log('promises', promises);
             for (let i = 0; i < promises.length; i++){
-                console.log(promises[i].rows);
-                photosQuery.push(promises[i].rows);
+                // console.log(promises[i].rows);
+                if (promises[i].rows.length > 0){
+                    photosQuery.push(promises[i].rows);
+                }
             }
-            console.log('photosQuery', photosQuery);
-            return photosQuery;
+            // console.log('photosQuery', photosQuery);
+            // return (photosQuery);
+            return Promise.all(skusArr)
+        }).then((skusPromise) => {
+            // console.log(skusPromise);
+            for (let j = 0; j < skusPromise.length; j++){
+                for (let k = 0; k < skusPromise[j].rows.length; k++){
+                    skusQuery[skusPromise[j].rows[k].size] = skusPromise[j].rows[k].quantity;
+                console.log('skusQuery', skusQuery);
+                }
+            }
         }).catch((err) => {
             if (err) {
                 console.log(err);
             }
-        })
+        });
+
+    var allPromises = {};
+    var resultArr = [];
+    Promise.all(stylesObj)
+        .then((finalResult) => {
+            allPromises.product_id = finalResult[0].product_id;
+            for(let i in finalResult) {
+                delete finalResult[i].product_id;
+                finalResult[i].photos = photosQuery[i] || [];
+                finalResult[i].skus = skusQuery;
+                resultArr.push(finalResult[i]);
+            }
+            allPromises.results = resultArr;
+            // console.log('finalResult', finalResult, 'finalPromise', allPromises, 'skus', allPromises.results[0].skus);
+            res.send(allPromises);
+        }).catch((err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
 }
 
 const getRelatedById = (req, res) => {
