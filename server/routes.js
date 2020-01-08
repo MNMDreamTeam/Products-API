@@ -116,8 +116,12 @@ const getStylesById = async (req, res) => {
             allPromises.product_id = finalResult[0].product_id;
             for(let i in finalResult) {
                 delete finalResult[i].product_id;
-                finalResult[i].photos = photosQuery[i] || [];
-                finalResult[i].skus = skusQuery;
+                finalResult[i].photos = photosQuery[i] || [{'thumbnail_url':null, 'url':null}];
+                if (Object.keys(skusQuery).length === 0) {
+                    finalResult[i].skus = {'null':null};
+                } else {
+                    finalResult[i].skus = skusQuery;
+                }
                 resultArr.push(finalResult[i]);
             }
             allPromises.results = resultArr;
