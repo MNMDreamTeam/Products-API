@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS product_info
     category VARCHAR (25) NOT NULL,
     default_price integer NOT NULL);
 
+CREATE INDEX product_id_index ON product_info (product_id);
+
 CREATE TABLE IF NOT EXISTS styles
     (product_id integer REFERENCES product_info(product_id),
     style_id serial PRIMARY KEY,
@@ -18,11 +20,17 @@ CREATE TABLE IF NOT EXISTS styles
     sale_price VARCHAR (10),
     is_default integer NOT NULL);
 
+CREATE INDEX style_id_index ON styles (style_id);
+CREATE INDEX product_id_stylesIndex ON styles (product_id);
+
 CREATE TABLE IF NOT EXISTS photos 
     (style_id integer REFERENCES styles(style_id),
     photos_id integer UNIQUE NOT NULL,
     thumbnail_url TEXT,
     url TEXT);
+
+CREATE INDEX style_id_photosIndex ON photos (style_id);
+CREATE INDEX photos_id_photosIndex ON photos (photos_id);
 
 CREATE TABLE IF NOT EXISTS skus 
     (style_id integer REFERENCES styles(style_id),
@@ -30,16 +38,27 @@ CREATE TABLE IF NOT EXISTS skus
     size VARCHAR (10),
     quantity integer);
 
+CREATE INDEX style_id_skusIndex ON skus (style_id);
+CREATE INDEX skus_id_skusIndex ON skus (skus_id);
+
 CREATE TABLE IF NOT EXISTS features
     (product_id integer REFERENCES product_info(product_id),
     feature_id integer PRIMARY KEY,
     feature VARCHAR (50),
     value VARCHAR (50));
 
+CREATE INDEX product_id_featuresIndex ON features (product_id);
+CREATE INDEX feature_id_featuresIndex ON features (feature_id);
+
 CREATE TABLE IF NOT EXISTS related
     (product_id integer REFERENCES product_info(product_id),
     related_id integer PRIMARY KEY,
     related_product_id integer);
+
+CREATE INDEX product_id_relatedIndex ON related (product_id);
+CREATE INDEX related_id_relatedIndex ON related (related_id);
+
+CREATE INDEX related_product_id_featuresIndex ON related (related_product_id);
 
 COPY product_info FROM '/Users/neilcrothers/ghrbld06/Data/product.csv' DELIMITER ',' CSV HEADER;
 
