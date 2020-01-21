@@ -1,2 +1,2 @@
-# nkcsdc
+# MNMDreamTeam Clothing Products API
 
