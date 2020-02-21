@@ -28,6 +28,6 @@ $ npm install
 $ \i "root to .sql file inside repository"
 ```
 
-
-
 ## Schema
+
+![Alt text](/images/screenshots/productsAPISchema.png?raw=true)
