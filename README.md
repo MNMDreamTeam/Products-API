@@ -25,7 +25,7 @@ $ git clone https://github.com/MNMDreamTeam/MNMDreamTeam-Products-API
 Navigate to the directory './productsAPI' and run the following command:
 ```
 $ npm install
-$ \i "root to .sql file inside repository'
+$ \i "root to .sql file inside repository"
 ```
 
 
