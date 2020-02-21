@@ -1,4 +1,4 @@
-# MNMDreamTeam Clothing Products API
+# Clothing Products API
 
 This API was created for the already existing Front-End  clothing website.  The API includes the products information for the website.  This API helps render a products carousel and a related products card.
 
