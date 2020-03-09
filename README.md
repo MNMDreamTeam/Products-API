@@ -1,4 +1,4 @@
-# MNMDreamTeam Clothing Products API
+# Clothing Products API
 
 This API was created for the already existing Front-End  clothing website.  The API includes the products information for the website.  This API helps render a products carousel and a related products card.
 
@@ -17,16 +17,7 @@ This API was created for the already existing Front-End  clothing website.  The 
 
 ## Getting Started
 
-Clone Repository from GitHub into desired directory
-```
-$ git clone https://github.com/MNMDreamTeam/MNMDreamTeam-Products-API
-```
 
-Navigate to the directory './productsAPI' and run the following command:
-```
-$ npm install
-$ \i "root to .sql file inside repository"
-```
 
 ## Schema
 
